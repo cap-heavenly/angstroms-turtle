@@ -13,4 +13,5 @@ def add_white(coords):
         coords[i] = (coords[i][0], coords[i][1], "white")
     return coords
 
+
 print(add_white(coords2))
