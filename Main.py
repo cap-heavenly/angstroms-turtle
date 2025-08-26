@@ -23,11 +23,17 @@ def goooo(whichtle, x, y):
     whichtle.seth(0)
     whichtle.pendown()
 
-def goround(whichtle, x, y):
+def gohead(whichtle, x, y):
     whichtle.speed(0)
     whichtle.penup()
     whichtle.goto(x, y)
     whichtle.pendown()
+
+def goround(whichtle):
+    gohead(whichtle, round(whichtle.xcor(), 10)+1, round(whichtle.ycor(), 10)+1)
+
+def goroundminus(whichtle):
+    gohead(whichtle, round(whichtle.xcor(), 10)-1, round(whichtle.ycor(), 10)-1) 
 
 def draw_grid(squaresize, squareamount, gridsidelength):
     #priming drawtle
@@ -39,7 +45,7 @@ def draw_grid(squaresize, squareamount, gridsidelength):
         for x in range(squareamount):
             print(f"Draw grid: {drawtle.position()}")
             drawtle.forward(squaresize)
-            goround(drawtle, round(drawtle.xcor(), 10), round(drawtle.ycor(), 10))
+            gohead(drawtle, round(drawtle.xcor(), 10), round(drawtle.ycor(), 10))
         goooo(drawtle, -(gridsidelength/2), (-(gridsidelength/2) + ((squaresize*(i+1)))))
     goooo(drawtle, -(gridsidelength/2), -(gridsidelength/2))
     drawtle.seth(90)
@@ -49,8 +55,8 @@ def draw_grid(squaresize, squareamount, gridsidelength):
             coords.append((round(drawtle.xcor(), 10), round(drawtle.ycor(), 10), "white"))
             print(f"Draw grid: {drawtle.position()}")
             drawtle.forward(squaresize)
-            goround(drawtle, round(drawtle.xcor(), 10), round(drawtle.ycor(), 10))
-        goround(drawtle, (-(gridsidelength/2) + ((squaresize*(i+1)))), -(gridsidelength/2))    
+            gohead(drawtle, round(drawtle.xcor(), 10), round(drawtle.ycor(), 10))
+        gohead(drawtle, (-(gridsidelength/2) + ((squaresize*(i+1)))), -(gridsidelength/2))    
 
 #Remove coord dupes from bad coding
 def clean_coords(coords):
@@ -235,6 +241,20 @@ def the_ant(squaresize, whichtle, life):
             whichtle.forward(squaresize)
             goooo(whichtle, round(whichtle.xcor(), 10), round(whichtle.ycor(), 10))
             whichtle.left(90)
+def the_ant2(squaresize, whichtle, life):
+    for i in range(life):
+        goround(whichtle)
+        whichtle.speed(1)
+        whichtle.penup()
+        if colour_check(whichtle) == "white":
+            square_fill(whichtle, whichtle.heading(), squaresize, "black")
+            whichtle.right(90)
+            whichtle.forward(squaresize)
+        else:
+            square_fill(whichtle, whichtle.heading(), squaresize, "white")
+            whichtle.left(90)
+            whichtle.forward(squaresize)
+        goroundminus(whichtle)
 #------------------------------------------------------------------------------------
 #setting up the screen
 s = drawtle.getscreen() # Makes the screen
@@ -252,9 +272,9 @@ coords = clean_coords(coords) # Remove dupe coords from the coords list from bad
 coord_blot(coords, squaresize/6, rainbow) #Coords is the coords of the system (changing will break)
 #                                          Rainbow is a list of colours of the rainbow. This can be changed to a string for single colours or a list or tuple for multiple colours.
 #                                          squaresize/6 is the size of the dot. This specific value scales the size of the dot with the size of the square. This can be changed to match preferences.
-s.tracer(1)  # Turn on screen updates after drawing the grid, cleaning coords and blotting the coords
 #------------------------------------------------------------------------------------
-#randomise_grid(squaresize)  # Randomise the grid with random colours
+randomise_grid(squaresize)  # Randomise the grid with random colours
+s.tracer(1)  # Turn on screen updates after drawing the grid, cleaning coords and blotting the coords
 #                             Squaresize is the size of each square
 #                             Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
 goooo(drawtle, 0, 0) # An alternative to the goto function. This makes sure the turtle is not dawing whilst moving and changes its rotation to be looking directly right.
@@ -294,7 +314,7 @@ colour_check(drawtle)  # A function that checks the colour of the square the tur
 #                      Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
 #                      2 is that age of the cake. This is a neat little feature that allows you to change the number of candles on the cake. For each 1px candle, 2 sections of cake will be drawn underneath except at the start, where one section of cake is drawn before any candles to make the cake even.
 #------------------------------------------------------------------------------------
-the_ant(squaresize, drawtle, 1000)  
+the_ant2(squaresize, drawtle, 1000)  
 
 
 drawtle.screen.exitonclick() # This stops it from throwing an error EVERYTIME I stop the program before it finishes running.
