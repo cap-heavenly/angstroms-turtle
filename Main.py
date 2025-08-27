@@ -1,5 +1,6 @@
 import turtle
 import random
+import time
 # Drawtle 
 drawtle = turtle.Turtle()
 
@@ -219,28 +220,8 @@ def movetocentre(whichtle, squaresize, angle=0):
     whichtle.right(90)
     whichtle.forward(squaresize/2)  # Move to the middle of the square
     whichtle.seth(angle)  # Set the heading to the specified angle
+
 # Function for my original purpose for this project, Langton's Ant. The turtle will move around the grid, if it encouters a white square, it will turn right and fill the square with black. If it encounters a black square, it will turn left and fill the square with white. It will continue this process until it has moved life times.
-def the_ant(squaresize, whichtle, life):
-    #Prime whichtle
-    movetocentre(whichtle, squaresize)
-    # Loop for the amount of life times
-    for i in range(life):
-        whichtle.speed(1)
-        whichtle.penup()
-        if colour_check(whichtle) == "white":
-            square_fill(whichtle, whichtle.heading(), squaresize, "black")
-            movetocentre(whichtle, squaresize, whichtle.heading())
-            whichtle.right(90)
-            whichtle.forward(squaresize)  
-            goooo(whichtle, round(whichtle.xcor(), 10), round(whichtle.ycor(), 10))
-            whichtle.right(90)
-        elif colour_check(whichtle) == "black":
-            square_fill(whichtle, whichtle.heading(), squaresize, "white")
-            movetocentre(whichtle, squaresize, whichtle.heading())
-            whichtle.left(90)
-            whichtle.forward(squaresize)
-            goooo(whichtle, round(whichtle.xcor(), 10), round(whichtle.ycor(), 10))
-            whichtle.left(90)
 def the_ant2(squaresize, whichtle, life):
     for i in range(life):
         goround(whichtle)
@@ -255,6 +236,53 @@ def the_ant2(squaresize, whichtle, life):
             whichtle.left(90)
             whichtle.forward(squaresize)
         goroundminus(whichtle)
+
+def startmenu():
+    global gridsidelength
+    global squareamount
+    global squaresize
+    print("Welcome to Angstroms Turtle!")
+    time.sleep(0.175)
+    while True:
+        print("Which combination of grid side length, row square amount and square size would you like to use?")
+        time.sleep(0.175)
+        print("[1] Side length/Row square amount")
+        time.sleep(0.175)
+        print("[2] Side length/Square size")
+        time.sleep(0.175)
+        print("[3] Row square amount/Square size")
+        inputprompt = input()
+        if inputprompt == "1":
+            time.sleep(0.175)
+            print("Side length:\n")
+            gridsidelength = int(input())
+            time.sleep(0.175)
+            print("Row square amount:\n")
+            squareamount = int(input())
+            squaresize = gridsidelength / squareamount
+            break
+        elif inputprompt == "2":
+            time.sleep(0.175)
+            print("Side length:\n")
+            gridsidelength = int(input())
+            time.sleep(0.175)
+            print("Square size:\n")
+            squaresize = int(input())
+            squareamount = gridsidelength / squaresize
+            break
+        elif inputprompt == "3":
+            time.sleep(0.175)
+            print("Row square amount:\n")
+            squareamount = int(input())
+            time.sleep(0.175)
+            print("Square size:\n")
+            squaresize = int(input())
+            gridsidelength = squaresize * squareamount
+            break
+        else:
+            time.sleep(0.175)
+            print("Oops! This doesn't seem to be a valid option. Please try again.")
+            time.sleep(0.175)
 #------------------------------------------------------------------------------------
 #setting up the screen
 s = drawtle.getscreen() # Makes the screen
@@ -263,6 +291,7 @@ s.title("Angstroms Turtle") # Sets the title of the screen
 #------------------------------------------------------------------------------------
 #Drawing things on screen
 s.tracer(0) # Turn off screen updates for faster drawing
+startmenu()
 draw_grid(squaresize, squareamount, gridsidelength)  #Draw the grid
 #                                                     Squaresize is the size of each square
 #                                                     Squareamount is the number of squares along one side of the grid
@@ -272,9 +301,9 @@ coords = clean_coords(coords) # Remove dupe coords from the coords list from bad
 coord_blot(coords, squaresize/6, rainbow) #Coords is the coords of the system (changing will break)
 #                                          Rainbow is a list of colours of the rainbow. This can be changed to a string for single colours or a list or tuple for multiple colours.
 #                                          squaresize/6 is the size of the dot. This specific value scales the size of the dot with the size of the square. This can be changed to match preferences.
-#------------------------------------------------------------------------------------
-randomise_grid(squaresize)  # Randomise the grid with random colours
 s.tracer(1)  # Turn on screen updates after drawing the grid, cleaning coords and blotting the coords
+#------------------------------------------------------------------------------------
+#randomise_grid(squaresize)  # Randomise the grid with random colours
 #                             Squaresize is the size of each square
 #                             Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
 goooo(drawtle, 0, 0) # An alternative to the goto function. This makes sure the turtle is not dawing whilst moving and changes its rotation to be looking directly right.
@@ -291,19 +320,19 @@ coord_detect(coords, drawtle)  # A function for detecting which square the turtl
 print(coords) # Prints the coords list to the console. This is useful for debugging.
 colour_check(drawtle)  # A function that checks the colour of the square the turtle is in and prints it to the console/returns it.
 #                      Drawtle is the turtle to check the colour of.
-#coord_move(drawtle, -5, 0, squaresize)  # A function that moves the turtle by a certain amount of squares. This is useful for drawing with the turtle, as it allowsyou to move the turtle based on the grid system, rather than the turtle position system. For example, instead of doing "drawtle.goto(237.454545, 123.454545)", you can do "coord_move(drawtle, 4, 17, squaresize)".
+coord_move(drawtle, -5, 0, squaresize)  # A function that moves the turtle by a certain amount of squares. This is useful for drawing with the turtle, as it allowsyou to move the turtle based on the grid system, rather than the turtle position system. For example, instead of doing "drawtle.goto(237.454545, 123.454545)", you can do "coord_move(drawtle, 4, 17, squaresize)".
 #                                         Drawtle is the turtle to move.
 #                                         -5 is the amount of squares to move on the x axis (this means horizontally).
 #                                         0 is the amount os squares to move on the y axis (this means vertically).
 #                                         squaresize is the size of the squares in the grid. This is used to calculate the distance to move the turtle.
 #                                         Changing these in this funciton call will break the code. If you wish to change these, change the value of their variables at the top of the code.
 #------------------------------------------------------------------------------------
-#smiley(drawtle, squaresize)  # A function that draws a simple smiley face. This is a fun little example of how you can use the coord_move and square_fill functions to draw pixel art.
+smiley(drawtle, squaresize)  # A function that draws a simple smiley face. This is a fun little example of how you can use the coord_move and square_fill functions to draw pixel art.
 #                              Drawtle is the turtle to draw the smiley face with.
 #                              squaresize is the size of the squares in the grid. This is used to calculate the size of the smiley face.
 #                              Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
-#coord_move(drawtle, 0, 5, squaresize)  # Move the turtle up by 5 squares to make space for the next drawing.
-#heart(drawtle, squaresize)  # A function that draws a heart shape. This is a fun little example of how you can use the coord_move and square_fill functions to draw pixel art.
+coord_move(drawtle, 0, 5, squaresize)  # Move the turtle up by 5 squares to make space for the next drawing.
+heart(drawtle, squaresize)  # A function that draws a heart shape. This is a fun little example of how you can use the coord_move and square_fill functions to draw pixel art.
 #                             Drawtle is the turtle to draw the heart shape with.
 #                             squaresize is the size of the squares in the grid. This is used to calculate the size of the heart shape.
 #                             Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
@@ -314,7 +343,7 @@ colour_check(drawtle)  # A function that checks the colour of the square the tur
 #                      Changing this in this funciton call will break the code. If you wish to change this, change the value of its variable at the top of the code.
 #                      2 is that age of the cake. This is a neat little feature that allows you to change the number of candles on the cake. For each 1px candle, 2 sections of cake will be drawn underneath except at the start, where one section of cake is drawn before any candles to make the cake even.
 #------------------------------------------------------------------------------------
-the_ant2(squaresize, drawtle, 1000)  
+#the_ant2(squaresize, drawtle, 1000)  
 
 
 drawtle.screen.exitonclick() # This stops it from throwing an error EVERYTIME I stop the program before it finishes running.
